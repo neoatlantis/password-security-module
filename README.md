@@ -3,12 +3,11 @@ password-security-module
 
 ### Introduction
 
-This project creates a Javascript library for both browser and NodeJS. It aims
-at securing existing passwords by encrypting them, or generating new passwords
-on demand. For both usages, the whole process is repeatable: by providing the
-same input, the library always produces the same output. And the cryptographic
-secrets necessary to control the library's behavior, never leaves the module
-itself.
+This project creates a Javascript library for NodeJS. It aims at securing
+existing passwords by encrypting them, or generating new passwords on demand.
+For both usages, the whole process is repeatable: by providing the same input,
+the library always produces the same output. And the cryptographic secrets
+necessary to control the library's behavior, never leaves the module itself.
 
 Although similar to another password manager, the library itself is stateless,
 it outsources any task for permanent storage to the calling code. As such this

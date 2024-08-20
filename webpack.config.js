@@ -19,8 +19,9 @@ module.exports = (env)=>{
             :'production'
         ),
         watch: true,
+        target: 'node',
         output: {
-            filename: "psm.js",
+            filename: is_dev?"psm.dev.js":"psm.js",
             path: path.join(basepath, "dist"),
             globalObject: 'this',
             library: {

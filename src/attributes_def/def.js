@@ -30,6 +30,7 @@ export default {
 
 	"object.type": {
 		verify: (v)=>_.includes([
+			"password-generator-nonce",
 			"password-generator",
 			"symmetric-encrypt",
 			"symmetric-sign",
@@ -47,7 +48,7 @@ export default {
 
 	"object.nonce": {
 		verify: (v)=>{
-			return isHEXString(v) && v.length > 16
+			return isHEXString(v) && v.length >= 32
 		}
 	},
 

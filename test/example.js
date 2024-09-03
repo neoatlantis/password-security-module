@@ -13,7 +13,8 @@ const default_psm = new PSM("default");
 	let pwdgen = default_psm.get_password_generator();
 
 	let url = await pwdgen.create_url("google.com");
-	url = 'psm-pwdgen://google.com/d06bca33595e7fd8589d0a2d1439fbf3?length=20&lower';
+	url = "psm-pwdgen://google.com/10600d367b850d0af211807298a08da0eabe227c141632c517fd?length=20&upper";
+	url += '&upper';
 	console.log(url);
 	console.log(await pwdgen.get_password(url));
 

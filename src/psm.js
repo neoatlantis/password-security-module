@@ -1,6 +1,6 @@
 import { AttributesDict, digestAttributesDict } from "app/AttributesDict";
 import wrapper from "app/wrapper";
-import PasswordGenerator from "app/password-generator";
+import PasswordGenerator from "app/password_generator";
 
 class PSM extends AttributesDict {
 

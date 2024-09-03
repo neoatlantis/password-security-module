@@ -123,7 +123,6 @@ class PasswordGenerator {
 		tempdict.set("object.domain", domain_name);
 		tempdict.set("object.nonce", raw_nonce_hex);
 
-		console.log(tempdict.serialize());
 		let signed_nonce = await digestAttributesDict.call(tempdict);
 		return (
 			raw_nonce_hex +
@@ -171,7 +170,6 @@ class PasswordGenerator {
 		tempdict.set("object.nonce", nonce);
 
 		let serialized = tempdict.serialize();
-		console.log(serialized);
 		let seed = await digestAttributesDict.call(tempdict);
 		
 		let derive_by_rule = PasswordDeriveByRule.from_querystring(url.search);

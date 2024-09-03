@@ -12,4 +12,10 @@ function check_value(key, value){
 	return true;
 }
 
-export { check_value };
+function set_value(key, value){
+	let convfunc = _.get(def, [key, "convert"]);
+	if(_.isFunction(convfunc)) return convfunc(value);
+	return value;
+}
+
+export { check_value, set_value };

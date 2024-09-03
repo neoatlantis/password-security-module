@@ -8,4 +8,15 @@ const PSM = psm.init(oracle);
 
 const default_psm = new PSM("default");
 
-default_psm.export().then(console.log);
+(async ()=>{
+
+	let pwdgen = default_psm.get_password_generator();
+
+	let url = await pwdgen.create_url("google.com");
+	url = 'psm-pwdgen://google.com/d06bca33595e7fd8589d0a2d1439fbf3?length=20&lower';
+	console.log(url);
+	console.log(await pwdgen.get_password(url));
+
+})();
+
+

@@ -1,5 +1,5 @@
 import d_stringify from "json-stringify-deterministic";
-import { check_value } from "app/attributes_def";
+import { check_value, set_value } from "app/attributes_def";
 import get_oracle from "app/random_oracle";
 
 
@@ -25,7 +25,7 @@ class AttributesDict {
 		if(this.#dict.has(key)){
 			throw Error("Key " + key + " is already set.");
 		}
-		this.#dict.set(key, value);
+		this.#dict.set(key, set_value(key, value));
 		return this;
 	}
 

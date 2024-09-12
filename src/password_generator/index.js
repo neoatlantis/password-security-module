@@ -3,10 +3,11 @@
 pwdgen://<domain-name>/<nonce>?length=10&lower&upper&numeric&special
 
 */
-import crypto from "crypto";
+//import crypto from "crypto";
 import buffer from "buffer";
 import { digestAttributesDict } from "app/AttributesDict";
 import ascii85 from "ascii85";
+import hdkf_derive_bytes from "app/subtlecrypto_call/hkdf_derive_bytes.js";
 
 const PROTOCOL = "psm-pwdgen";
 
@@ -71,11 +72,13 @@ class PasswordDeriveByRule {
 		let counter = new Uint8Array(1);
 		for(let i=0; i<=0xff; i++){
 			counter[0] = i;
-			let material = await new Promise((resolve, reject)=>{
-				crypto.hkdf('sha512', seed, counter, "", 128, (err, key)=>{
-					if(err) return reject(err);
-					resolve(key);
-				});
+
+			let material = await hdkf_derive_bytes({
+				key: new Uint8Array(seed),
+				algorithm: 'SHA-512',
+				salt: counter,
+				info: new Uint8Array([]),
+				bytes_length: 128
 			});
 
 			let string = filter(

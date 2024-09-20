@@ -4,7 +4,8 @@
   "description": "A module inspired by TPM to provide some password security by safely storing and generating passwords.",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack"
+    "dev": "webpack",
+    "dist": "webpack --env production=1"
   },
   "author": "NeoAtlantis",
   "license": "GPL-2.0",

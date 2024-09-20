@@ -15,8 +15,6 @@
   },
   "dependencies": {
     "@msgpack/msgpack": "^3.0.0-beta2",
-    "ascii85": "^1.0.2",
-    "buffer": "^6.0.3",
     "json-stringify-deterministic": "^1.0.12",
     "lodash": "^4.17.21"
   }

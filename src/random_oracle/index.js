@@ -1,15 +1,14 @@
 import _ from "lodash";
 import buffer from "buffer";
+import { ascii2buf } from "app/encoder";
 
 var oracle = null;
 
 function wrap_oracle(oracle){
 	return function(data){
-		if(_.isString(data)) data = buffer.Buffer.from(data, "ascii");
-		if(_.isTypedArray(data)) data = buffer.Buffer.from(data);
-
-		if(!buffer.Buffer.isBuffer(data)) throw Error("Incompatiable data type.");
-		return oracle(new Uint8Array(data));
+		if(_.isString(data)) data = ascii2buf(data);
+		if(!_.isTypedArray(data)) throw Error("Incompatiable data type.");
+		return oracle(new Uint8Array(data.buffer));
 	}
 }
 

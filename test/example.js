@@ -23,10 +23,10 @@ const default_psm = new PSM("default");
 
 	let url = await pwdgen.create_url("google.com");
 	//url = "psm-pwdgen://google.com/10600d367b850d0af211807298a08da0eabe227c141632c517fd?length=20"; // with SHA-512 as oracle
-	url = "psm-pwdgen://google.com/6792ea41f275ca36670efdc878d3cbae14fdbf8518d3c83e554f?length=20";	// with HMAC-SHA-512 as oracle
-	url += '&upper';
-	console.log(url);
-	console.log(await pwdgen.get_password(url));
+	url = "psm-pwdgen://google.com/6792ea41f275ca36670efdc878d3cbae14fdbf8518d3c83e554f?length=40";	// with HMAC-SHA-512 as oracle
+	console.log(await pwdgen.get_password(url + '&upper'));
+	console.log(await pwdgen.get_password(url + '&upper&lower'));
+	console.log(await pwdgen.get_password(url + '&upper&lower&number'));
 
 })();
 

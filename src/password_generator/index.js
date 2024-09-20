@@ -4,10 +4,9 @@ pwdgen://<domain-name>/<nonce>?length=10&lower&upper&numeric&special
 
 */
 //import crypto from "crypto";
-import buffer from "buffer";
 import { digestAttributesDict } from "app/AttributesDict";
-import ascii85 from "ascii85";
 import hdkf_derive_bytes from "app/subtlecrypto_call/hkdf_derive_bytes.js";
+import { buf2ascii, buf2hex, buf2password } from "app/encoder";
 
 const PROTOCOL = "psm-pwdgen";
 
@@ -73,16 +72,16 @@ class PasswordDeriveByRule {
 		for(let i=0; i<=0xff; i++){
 			counter[0] = i;
 
-			let material = await hdkf_derive_bytes({
+			let material = new Uint8Array(await hdkf_derive_bytes({
 				key: new Uint8Array(seed),
 				algorithm: 'SHA-512',
 				salt: counter,
 				info: new Uint8Array([]),
 				bytes_length: 128
-			});
+			}));
 
 			let string = filter(
-				ascii85.encode(material).toString().slice(0, -5)
+				buf2password(material).slice(0, -5)
 			);
 			ret += string;
 
@@ -119,9 +118,9 @@ class PasswordGenerator {
 	}
 
 	async #create_nonce(domain_name){
-		let raw_nonce_hex = buffer.Buffer.from(
+		let raw_nonce_hex = buf2hex(
 			crypto.getRandomValues(new Uint8Array(NONCE_LENGTH_BYTES))
-		).toString('hex');
+		);
 		let tempdict = this.#nonce_dict.clone();
 		tempdict.set("object.domain", domain_name);
 		tempdict.set("object.nonce", raw_nonce_hex);
@@ -129,8 +128,7 @@ class PasswordGenerator {
 		let signed_nonce = await digestAttributesDict.call(tempdict);
 		return (
 			raw_nonce_hex +
-			buffer.Buffer.from(signed_nonce).toString('hex')
-				.slice(0,2*NONCE_SIGN_LENGTH_BYTES)
+			buf2hex(signed_nonce).slice(0,2*NONCE_SIGN_LENGTH_BYTES)
 		);
 	}
 
@@ -144,7 +142,7 @@ class PasswordGenerator {
 		tempdict.set("object.nonce", raw_nonce_hex);
 
 		let signed_nonce = await digestAttributesDict.call(tempdict);
-		let signed_nonce_hex = buffer.Buffer.from(signed_nonce).toString('hex')
+		let signed_nonce_hex = buf2hex(signed_nonce)
 			.slice(0,2*NONCE_SIGN_LENGTH_BYTES);
 
 		return nonce_hex == raw_nonce_hex + signed_nonce_hex;

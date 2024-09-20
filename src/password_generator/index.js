@@ -7,6 +7,7 @@ pwdgen://<domain-name>/<nonce>?length=10&lower&upper&numeric&special
 import { digestAttributesDict } from "app/AttributesDict";
 import hdkf_derive_bytes from "app/subtlecrypto_call/hkdf_derive_bytes.js";
 import { buf2ascii, buf2hex, buf2password } from "app/encoder";
+import url_parse from "url-parse";
 
 const PROTOCOL = "psm-pwdgen";
 
@@ -136,6 +137,7 @@ class PasswordGenerator {
 		if(nonce_hex.length < 2*(NONCE_LENGTH_BYTES+NONCE_SIGN_LENGTH_BYTES)){
 			return false;
 		}
+
 		let tempdict = this.#nonce_dict.clone();
 		let raw_nonce_hex = nonce_hex.slice(0, 2*NONCE_LENGTH_BYTES);
 		tempdict.set("object.domain", domain_name);
@@ -156,7 +158,8 @@ class PasswordGenerator {
 	}
 
 	async get_password(psm_pwdgen_url){
-		let url = new URL(psm_pwdgen_url);
+		//let url = new URL(psm_pwdgen_url);
+		let url = url_parse(psm_pwdgen_url);
 		if(url.protocol != PROTOCOL + ":"){
 			throw Error("Not a password generator URL.");
 		}
@@ -173,7 +176,7 @@ class PasswordGenerator {
 		let serialized = tempdict.serialize();
 		let seed = await digestAttributesDict.call(tempdict);
 		
-		let derive_by_rule = PasswordDeriveByRule.from_querystring(url.search);
+		let derive_by_rule = PasswordDeriveByRule.from_querystring(url.query);
 		return await derive_by_rule.derive(seed);
 	}
 

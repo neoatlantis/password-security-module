@@ -2,7 +2,7 @@
   "name": "password-security-module",
   "version": "1.0.0",
   "description": "A module inspired by TPM to provide some password security by safely storing and generating passwords.",
-  "main": "index.js",
+  "main": "dist/psm.js",
   "scripts": {
     "dev": "webpack",
     "dist": "webpack --env production=1"

@@ -1,6 +1,7 @@
 import { AttributesDict, digestAttributesDict } from "app/AttributesDict";
 import wrapper from "app/wrapper";
 import PasswordGenerator from "app/password_generator";
+import DataVault from "app/data_vault";
 
 class PSM extends AttributesDict {
 
@@ -16,6 +17,9 @@ class PSM extends AttributesDict {
 		return new PasswordGenerator(this.clone());
 	}
 
+	get_data_vault(){
+		return new DataVault(this.clone());
+	}
 
 	export(){
 		return wrapper.wrap(this);

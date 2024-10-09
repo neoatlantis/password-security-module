@@ -31,6 +31,14 @@ const default_psm = new PSM("default");
 	console.log(await pwdgen.get_password(url + '&upper&lower'));
 	console.log(await pwdgen.get_password(url + '&upper&lower&number'));
 
+	console.log("data vault");
+	let vault = default_psm.get_data_vault();
+	let plaintext = new Uint8Array([1,2,3,4]);
+	let encrypted = await vault.encrypt(plaintext);
+	console.log("*", encrypted);
+	let decrypted = await vault.decrypt(encrypted);
+	console.log(decrypted);
+
 })();
 
 

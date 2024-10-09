@@ -32,8 +32,8 @@ export default {
 		verify: (v)=>_.includes([
 			"password-generator-nonce",
 			"password-generator",
-			"symmetric-encrypt",
-			"symmetric-sign",
+			"data-vault-nonce",
+			"data-vault",
 		], v),
 	},
 

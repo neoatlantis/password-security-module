@@ -66,10 +66,10 @@ class SignedNonce {
 		});
 	}
 
-	async verify_nonce_of_buffer(data){
+	async verify_nonce_of_buffer(data, nonce_hex){
 		return await this.#verify_nonce((tempdict)=>{
 			tempdict.set("object.data", buf2hex(data));
-		});
+		}, nonce_hex);
 	}
 }
 

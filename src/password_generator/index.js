@@ -8,6 +8,7 @@ import { digestAttributesDict } from "app/AttributesDict";
 import hdkf_derive_bytes from "app/subtlecrypto_call/hkdf_derive_bytes.js";
 import { buf2ascii, buf2hex, buf2password } from "app/encoder";
 import url_parse from "url-parse";
+import SignedNonce from "app/_internal_class/SignedNonce";
 
 const PROTOCOL = "psm-pwdgen";
 
@@ -99,59 +100,28 @@ class PasswordDeriveByRule {
 
 
 
-const NONCE_LENGTH_BYTES = 16;
-const NONCE_SIGN_LENGTH_BYTES = 10;
+
 
 
 class PasswordGenerator {
 
 	#dict;
-	#nonce_dict;
+	#signed_nonce;
 
 	constructor(basic_dict){
 		this.#dict = basic_dict.clone();
 		this.#dict.set("object.type", "password-generator");
 		this.#dict.lock();
 
-		this.#nonce_dict = basic_dict.clone();
-		this.#nonce_dict.set("object.type", "password-generator-nonce");
-		this.#nonce_dict.lock();
-	}
-
-	async #create_nonce(domain_name){
-		let raw_nonce_hex = buf2hex(
-			crypto.getRandomValues(new Uint8Array(NONCE_LENGTH_BYTES))
+		this.#signed_nonce = new SignedNonce(
+			basic_dict,
+			"password-generator-nonce"
 		);
-		let tempdict = this.#nonce_dict.clone();
-		tempdict.set("object.domain", domain_name);
-		tempdict.set("object.nonce", raw_nonce_hex);
-
-		let signed_nonce = await digestAttributesDict.call(tempdict);
-		return (
-			raw_nonce_hex +
-			buf2hex(signed_nonce).slice(0,2*NONCE_SIGN_LENGTH_BYTES)
-		);
-	}
-
-	async #verify_nonce(domain_name, nonce_hex){
-		if(nonce_hex.length < 2*(NONCE_LENGTH_BYTES+NONCE_SIGN_LENGTH_BYTES)){
-			return false;
-		}
-
-		let tempdict = this.#nonce_dict.clone();
-		let raw_nonce_hex = nonce_hex.slice(0, 2*NONCE_LENGTH_BYTES);
-		tempdict.set("object.domain", domain_name);
-		tempdict.set("object.nonce", raw_nonce_hex);
-
-		let signed_nonce = await digestAttributesDict.call(tempdict);
-		let signed_nonce_hex = buf2hex(signed_nonce)
-			.slice(0,2*NONCE_SIGN_LENGTH_BYTES);
-
-		return nonce_hex == raw_nonce_hex + signed_nonce_hex;
 	}
 
 	async create_url(domain_name){
-		let nonce = await this.#create_nonce(domain_name);
+		let nonce = 
+			await this.#signed_nonce.create_nonce_for_domain(domain_name);
 		let url = new URL(nonce, PROTOCOL+"://" + domain_name);
 		let default_rule = new PasswordDeriveByRule({});
 		return url.toString() + "?" + default_rule.toString();
@@ -168,7 +138,9 @@ class PasswordGenerator {
 		tempdict.set("object.domain", url.hostname);
 
 		let nonce = url.pathname.split("/")[1];
-		if(!(await this.#verify_nonce(url.hostname, nonce))){
+		if(!(await this.#signed_nonce.verify_nonce_of_domain(
+			url.hostname, nonce))
+		){
 			throw Error("Invalid password generator URL.");
 		}
 		tempdict.set("object.nonce", nonce);

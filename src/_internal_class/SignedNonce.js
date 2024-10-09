@@ -1,5 +1,5 @@
 import { digestAttributesDict } from "app/AttributesDict";
-import { buf2ascii, buf2hex, buf2password } from "app/encoder";
+import { buf2ascii, buf2hex, buf2password } from "app/_internal_class/encoder";
 
 const NONCE_LENGTH_BYTES = 16;
 const NONCE_SIGN_LENGTH_BYTES = 10;
@@ -60,6 +60,17 @@ class SignedNonce {
 		}, nonce_hex);
 	}
 
+	async create_nonce_for_buffer(data){
+		return await this.#create_nonce((tempdict)=>{
+			tempdict.set("object.data", buf2hex(data));
+		});
+	}
+
+	async verify_nonce_of_buffer(data){
+		return await this.#verify_nonce((tempdict)=>{
+			tempdict.set("object.data", buf2hex(data));
+		});
+	}
 }
 
 export default SignedNonce;

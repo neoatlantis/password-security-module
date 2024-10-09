@@ -5,8 +5,8 @@ pwdgen://<domain-name>/<nonce>?length=10&lower&upper&numeric&special
 */
 //import crypto from "crypto";
 import { digestAttributesDict } from "app/AttributesDict";
-import hdkf_derive_bytes from "app/subtlecrypto_call/hkdf_derive_bytes.js";
-import { buf2ascii, buf2hex, buf2password } from "app/encoder";
+import hdkf_derive_bytes from "app/primitives/_hkdf_derive_bytes";
+import { buf2ascii, buf2hex, buf2password } from "app/_internal_class/encoder";
 import url_parse from "url-parse";
 import SignedNonce from "app/_internal_class/SignedNonce";
 

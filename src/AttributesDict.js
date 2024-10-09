@@ -1,6 +1,6 @@
 import d_stringify from "json-stringify-deterministic";
 import { check_value, set_value } from "app/attributes_def";
-import get_oracle from "app/random_oracle";
+import get_oracle from "app/primitives/random_oracle";
 
 
 class AttributesDict {

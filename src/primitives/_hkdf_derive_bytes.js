@@ -1,6 +1,7 @@
-const subtle = crypto.subtle;
+import get_crypto from "./crypto_api";
 
 export default async function({ key, algorithm, salt, info, bytes_length }){
+	const subtle = get_crypto().subtle;
 
 	const secret_key = await subtle.importKey(
 		'raw',

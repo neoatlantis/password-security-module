@@ -1,6 +1,6 @@
 import _ from "lodash";
 import buffer from "buffer";
-import { ascii2buf } from "app/encoder";
+import { ascii2buf } from "app/_internal_class/encoder";
 
 var oracle = null;
 

@@ -52,6 +52,12 @@ export default {
 		}
 	},
 
+	"object.data": {
+		verify: (v)=>{
+			return isHEXString(v)
+		}
+	},
+
 
 
 
